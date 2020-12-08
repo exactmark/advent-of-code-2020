@@ -47,8 +47,7 @@ func makePasswordEntry(test_string string) PasswordEntry {
 	thisPassword := PasswordEntry{}
 	thisPassword.password = stringParts[1]
 	rules := strings.Split(stringParts[0], " ")
-	//I'm sure there's a better way to get one rune.
-	thisPassword.targetRune = []rune(rules[1])[0]
+	thisPassword.targetRune = rune(rules[1][0])
 	thisPassword.lowCount, _ = strconv.Atoi(strings.Split(rules[0], "-")[0])
 	thisPassword.highCount, _ = strconv.Atoi(strings.Split(rules[0], "-")[1])
 	thisPassword.populateMatches()
@@ -56,7 +55,7 @@ func makePasswordEntry(test_string string) PasswordEntry {
 	return thisPassword
 }
 
-func Solve(inputLines []string){
+func Solve(inputLines []string) {
 	numberValid := 0
 	pt2NumberValid := 0
 	for _, singleLine := range inputLines {

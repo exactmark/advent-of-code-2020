@@ -1,14 +1,14 @@
 package main
 
 import (
-	"advent-of-code/Day02"
+	"advent-of-code/Day03"
 	"bufio"
 	"log"
 	"os"
 )
 
 func readInputFile(filename string) []string {
-	var returnStrings [] string
+	var returnStrings []string
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -26,11 +26,12 @@ func readInputFile(filename string) []string {
 	return returnStrings
 }
 
-
 func main() {
 
-	currentDay := "02"
+	currentDay := "03"
 
-	inputLines := readInputFile("./Day"+currentDay+"/input.txt")
-	Day02.Solve(inputLines)
+	//inputLines := readInputFile("./Day"+currentDay+"/test_input.txt")
+	inputLines := readInputFile("./Day" + currentDay + "/input.txt")
+	Day03.Solve(inputLines)
+
 }
