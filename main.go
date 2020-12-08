@@ -29,6 +29,8 @@ func readInputFile(filename string) []string {
 
 func main() {
 
-	inputLines := readInputFile("input.txt")
+	currentDay := "02"
+
+	inputLines := readInputFile("./Day"+currentDay+"/input.txt")
 	Day02.Solve(inputLines)
 }
