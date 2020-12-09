@@ -2,6 +2,7 @@ package Day04
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -54,6 +55,40 @@ func passportMapIsValid(passport map[string]string) bool {
 	return false
 }
 
+func pt2PassportIsValid(passport map[string]string) bool {
+	//byr (Birth Year) - four digits; at least 1920 and at most 2002.
+	//iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+	//eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+	//hgt (Height) - a number followed by either cm or in:
+	//If cm, the number must be at least 150 and at most 193.
+	//If in, the number must be at least 59 and at most 76.
+	//hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+	//ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+	//pid (Passport ID) - a nine-digit number, including leading zeroes.
+	//cid (Country ID) - ignored, missing or not.
+
+	keyFmts := [][]string{{"byr", "^(19[2-9][0-9]|200[0-2])$"},
+		{"iyr", "^(2020|201[0-9])$"},
+		{"eyr", "^(2030|202[0-9])$"},
+		{"hgt", "^(1([5-8][0-9]|9[0-3])cm|(59|6[0-9]|7[0-6])in)$"},
+		{"hcl", "^#([0-9]|[a-f]){6}$"},
+		{"ecl", "^(amb|blu|brn|gry|grn|hzl|oth)$"},
+		{"pid", "^[0-9]{9}$"}}
+
+	for _, rule := range keyFmts {
+		val, exists := passport[rule[0]]
+		if !exists {
+			return false
+		}
+		isValid, _ := regexp.MatchString(rule[1], val)
+		if !isValid {
+			return false
+		}
+	}
+
+	return true
+}
+
 func solvePt1(inputLines []string) {
 	allPassports := getPassportListFromInput(inputLines)
 	validPassports := 0
@@ -65,7 +100,18 @@ func solvePt1(inputLines []string) {
 	fmt.Printf("Found %v valid passports\n", validPassports)
 }
 
+func solvePt2(inputLines []string) {
+	allPassports := getPassportListFromInput(inputLines)
+	validPassports := 0
+	for _, singlePassPort := range allPassports {
+		if pt2PassportIsValid(singlePassPort) {
+			validPassports++
+		}
+	}
+	fmt.Printf("Found %v valid passports\n", validPassports)
+}
+
 func Solve(inputLines []string) {
-	solvePt1(inputLines)
-	//solvePt2(inputLines)
+	//solvePt1(inputLines)
+	solvePt2(inputLines)
 }
