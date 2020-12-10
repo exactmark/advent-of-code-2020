@@ -44,15 +44,16 @@ func createAnswerMapArray(inputLines []string) ([]map[rune]int, []int) {
 
 func solvePt2(inputLines []string) {
 
-	surveyArray, countArray := createAnswerMapArray(inputLines)
+	surveyAnswersArray, participantCountArray := createAnswerMapArray(inputLines)
 
 	yesSum := 0
 
-	for x:=0;x<len(surveyArray) ;x++  {
-		//thisCount:=0
-		thisPartCount:=countArray[x]
-		for _,val :=range surveyArray[x]  {
-			if val == thisPartCount{
+	for x:=0;x<len(surveyAnswersArray) ;x++  {
+		thisParticipantCount := participantCountArray[x]
+		//if any key has the same number of "Y" as the number of participants,
+		//then all participants said y--- count it!
+		for _,val :=range surveyAnswersArray[x]  {
+			if val == thisParticipantCount {
 				yesSum++
 			}
 		}
