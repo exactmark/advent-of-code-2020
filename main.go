@@ -30,12 +30,15 @@ func readInputFile(filename string) []string {
 
 func main() {
 
-	start := time.Now()
 	currentDay := "04"
 
-	//inputLines := readInputFile("./Day"+currentDay+"/test_input.txt")
 	inputLines := readInputFile("./Day" + currentDay + "/input.txt")
+	//inputLines := readInputFile("./Day"+currentDay+"/test_input.txt")
+
+	start := time.Now()
+
 	Day04.Solve(inputLines)
+
 	elapsed := time.Since(start)
 	fmt.Printf("solve took %s", elapsed)
 }
