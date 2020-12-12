@@ -10,30 +10,38 @@ type bag struct {
 	color       string
 	contains    map[string]int
 	containedBy []string
-	canHoldGold bool
+}
+
+type canHoldMap struct {
+	targetColor  string
+	canHoldIndex map[string]canHoldLink
+}
+
+type canHoldLink struct {
+	canHoldColor bool
+	evaluated    bool
 }
 
 func makeSingleBag(descriptor string) bag {
 	descriptorSplit := strings.Split(descriptor, " bags contain ")
-	bagColor:=descriptorSplit[0]
+	bagColor := descriptorSplit[0]
 	containsString := descriptorSplit[1]
 	containsString = containsString[:len(containsString)-1]
 	contains := make(map[string]int)
 
 	if containsString != "no other bags" {
-		for _,singleContained := range strings.Split(containsString,", "){
-			spaceSplit:=strings.Split(singleContained," ")
-			containedNumber,_:=strconv.Atoi( spaceSplit[0])
-			containedColor:=strings.Join(spaceSplit[1:len(spaceSplit)-1]," ")
-			contains[containedColor]=containedNumber
+		for _, singleContained := range strings.Split(containsString, ", ") {
+			spaceSplit := strings.Split(singleContained, " ")
+			containedNumber, _ := strconv.Atoi(spaceSplit[0])
+			containedColor := strings.Join(spaceSplit[1:len(spaceSplit)-1], " ")
+			contains[containedColor] = containedNumber
 		}
 	}
 
 	return bag{
 		color:       bagColor,
 		contains:    contains,
-		containedBy: make([]string,0),
-		canHoldGold: false,
+		containedBy: make([]string, 0),
 	}
 }
 
@@ -42,14 +50,21 @@ func processInputToBagMap(inputLines []string) *map[string]bag {
 
 	for _, singleLine := range inputLines {
 		thisBag := makeSingleBag(singleLine)
-		fmt.Printf("%v\n", thisBag)
+		returnBagMap[thisBag.color]=thisBag
 	}
 
 	return &returnBagMap
 }
 
-func populateTrackBack(bagMapPtr *map[string]bag){
-	bagMap:=*bagMapPtr
+func populateTrackBack(bagMapPtr *map[string]bag) {
+	bagMapActual := *bagMapPtr
+	for _,containingBag := range bagMapActual{
+		for containedBag,_ :=range containingBag.contains{
+			fmt.Printf("%v\n",containedBag)
+			bagMapActual[containedBag].containedBy=append(bagMapActual[containedBag].containedBy,containingBag.color)
+		}
+	}
+	fmt.Printf("%v\n", bagMapActual)
 }
 
 func solvePt1(inputLines []string) {
