@@ -7,9 +7,10 @@ import (
 )
 
 type bag struct {
-	color       string
-	contains    map[string]int
-	containedBy []string
+	color         string
+	contains      map[string]int
+	containedBy   []string
+	bagsContained int
 }
 
 type canHoldStruct struct {
@@ -39,15 +40,17 @@ func makeSingleBag(descriptor string) bag {
 	}
 
 	return bag{
-		color:       bagColor,
-		contains:    contains,
-		containedBy: make([]string, 0),
+		color:         bagColor,
+		contains:      contains,
+		containedBy:   make([]string, 0),
+		bagsContained: -1,
 	}
 }
 
 func makeBagMap(inputLines []string) *map[string]*bag {
 	bagMap := *(processInputToBagMap(inputLines))
 	populateTrackBack(&bagMap)
+	populateBagsContained(&bagMap)
 	return &bagMap
 }
 
@@ -71,6 +74,32 @@ func populateTrackBack(bagMapPtr *map[string]*bag) {
 		}
 	}
 	//fmt.Printf("%v\n", bagMapActual)
+}
+
+func populateBagsContained(bagMapPtr *map[string]*bag) {
+	bagMapActual := *bagMapPtr
+	for _, singleBag := range bagMapActual {
+		populateBagsContainedLogic(bagMapPtr, singleBag.color)
+	}
+}
+
+//we're going to pretend there are no circular loops
+func populateBagsContainedLogic(bagMapPtr *map[string]*bag, colorToCheck string) int {
+	bagMapActual := *bagMapPtr
+	bagToCheck, _ := bagMapActual[colorToCheck]
+	if bagToCheck.bagsContained>=0 {
+		return bagToCheck.bagsContained
+	}else{
+		containedDirectly:=0
+		secondDegreeContained:=0
+		for containedColor,numContainedBag:=range bagToCheck.contains{
+			containedDirectly+=numContainedBag
+			secondDegreeContained+=numContainedBag*populateBagsContainedLogic(bagMapPtr,containedColor)
+		}
+		bagToCheck.bagsContained=containedDirectly+secondDegreeContained
+		return bagToCheck.bagsContained
+	}
+
 }
 
 func determineHowManyCanHold(target string, bagMapPtr *map[string]*bag) {
@@ -199,7 +228,14 @@ func solvePt1(inputLines []string) {
 	determineHowManyCanHold("shiny gold", &bagMap)
 }
 
+func solvePt2(inputLines []string) {
+	bagMap := *(makeBagMap(inputLines))
+	targetColor:="shiny gold"
+	fmt.Printf("%v can hold %v bags\n",targetColor,bagMap[targetColor].bagsContained)
+
+}
+
 func Solve(inputLines []string) {
-	solvePt1(inputLines)
-	//solvePt2(inputLines)
+	//solvePt1(inputLines)
+	solvePt2(inputLines)
 }
