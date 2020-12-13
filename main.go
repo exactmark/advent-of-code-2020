@@ -32,8 +32,9 @@ func main() {
 
 	currentDay := "08"
 
-	inputLines := readInputFile("./Day" + currentDay + "/test_input.txt")
-	//inputLines := readInputFile("./Day" + currentDay + "/input.txt")
+	//inputLines := readInputFile("./Day" + currentDay + "/test_input.txt")
+	inputLines := readInputFile("./Day" + currentDay + "/input.txt")
+
 	start := time.Now()
 
 	Day08.Solve(inputLines)
