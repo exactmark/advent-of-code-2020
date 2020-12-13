@@ -6,6 +6,20 @@ import (
 	"strconv"
 )
 
+func FindMatchingPairSafe(target int, lowList []int, highList []int) (bool, int, int) {
+	lowListCopy:=make([]int,len(lowList))
+	highListCopy:=make([]int,0)
+	copy(lowListCopy,lowList)
+	if (&lowList)!=(&highList){
+		highListCopy=make([]int,len(highList))
+		copy(highListCopy,highList)
+
+	}else {
+		highListCopy=lowListCopy
+	}
+	return findMatchingPair(target,lowListCopy,highListCopy)
+}
+
 func findMatchingPair(target int, lowList []int, highList []int) (bool, int, int) {
 	sort.Ints(lowList)
 	sort.Ints(highList)
