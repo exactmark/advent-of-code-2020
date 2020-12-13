@@ -1,7 +1,7 @@
 package main
 
 import (
-	"advent-of-code/Day07"
+	"advent-of-code/Day08"
 	"bufio"
 	"fmt"
 	"log"
@@ -30,13 +30,13 @@ func readInputFile(filename string) []string {
 
 func main() {
 
-	currentDay := "07"
+	currentDay := "08"
 
-	//inputLines := readInputFile("./Day"+currentDay+"/test_input.txt")
-	inputLines := readInputFile("./Day" + currentDay + "/input.txt")
+	inputLines := readInputFile("./Day" + currentDay + "/test_input.txt")
+	//inputLines := readInputFile("./Day" + currentDay + "/input.txt")
 	start := time.Now()
 
-	Day07.Solve(inputLines)
+	Day08.Solve(inputLines)
 
 	elapsed := time.Since(start)
 	fmt.Printf("solve took %s", elapsed)
