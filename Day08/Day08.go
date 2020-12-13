@@ -13,12 +13,14 @@ type instruction struct {
 
 type runCode struct {
 	runLine    instruction
+	orderExec  int
 	hasVisited bool
 }
 
 type runTimeEnv struct {
 	accumulator int
 	pointer     int
+	steps       int
 	codeBase    []*runCode
 }
 
@@ -56,6 +58,7 @@ func createRunTimeEnv(instructionList *[]instruction) *runTimeEnv {
 
 func (thisRunTime *runTimeEnv) processCurrentInstruction() string {
 	nextInstruction := thisRunTime.codeBase[thisRunTime.pointer]
+	thisRunTime.steps++
 	step := 0
 	scale := 0
 	switch nextCommand := nextInstruction.runLine.command; nextCommand {
@@ -68,7 +71,8 @@ func (thisRunTime *runTimeEnv) processCurrentInstruction() string {
 	case "jmp":
 		step = nextInstruction.runLine.scale
 	}
-
+	fmt.Printf("%v %v\n", nextInstruction.runLine.command, nextInstruction.runLine.scale)
+	nextInstruction.orderExec = thisRunTime.steps
 	thisRunTime.pointer += step
 	if thisRunTime.pointer >= len(thisRunTime.codeBase) {
 		//thisRunTime.pointer-=step
@@ -93,7 +97,7 @@ func (thisRunTime *runTimeEnv) startProcessing() {
 		}
 	}
 	if bailResult != "" {
-		fmt.Printf("Accumulator is %v with bailresult of '%v' at %v\n", thisRunTime.accumulator, bailResult,thisRunTime.pointer)
+		fmt.Printf("Accumulator is %v with bailresult of '%v' at %v\n", thisRunTime.accumulator, bailResult, thisRunTime.pointer)
 	} else {
 		fmt.Printf("Accumulator is %v\n", thisRunTime.accumulator)
 	}
