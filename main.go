@@ -40,5 +40,5 @@ func main() {
 	Day08.Solve(inputLines)
 
 	elapsed := time.Since(start)
-	fmt.Printf("solve took %s", elapsed)
+	fmt.Printf("solve took %s\n", elapsed)
 }

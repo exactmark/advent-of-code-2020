@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type instruction struct {
@@ -71,11 +72,12 @@ func (thisRunTime *runTimeEnv) processCurrentInstruction() string {
 	case "jmp":
 		step = nextInstruction.runLine.scale
 	}
-	fmt.Printf("%v %v\n", nextInstruction.runLine.command, nextInstruction.runLine.scale)
+	//fmt.Printf("%v %v\n", nextInstruction.runLine.command, nextInstruction.runLine.scale)
 	nextInstruction.orderExec = thisRunTime.steps
 	thisRunTime.pointer += step
 	if thisRunTime.pointer >= len(thisRunTime.codeBase) {
 		//thisRunTime.pointer-=step
+		thisRunTime.accumulator += scale
 		return "hit EOF"
 	} else if thisRunTime.codeBase[thisRunTime.pointer].hasVisited {
 		//thisRunTime.pointer-=step
@@ -116,11 +118,60 @@ func solvePt1(inputLines []string) {
 	thisRunTime.startProcessing()
 }
 
+func (thisRunTime *runTimeEnv) startProcessingPt2() {
+	bailResult := ""
+	for {
+		bailResult = thisRunTime.processCurrentInstruction()
+		if bailResult != "" {
+			break
+		}
+	}
+	if bailResult == "hit EOF" {
+		fmt.Printf("Accumulator is %v with bailresult of '%v' at %v\n", thisRunTime.accumulator, bailResult, thisRunTime.pointer)
+	} else {
+		//fmt.Printf("Accumulator is %v with bailresult of '%v' at %v\n", thisRunTime.accumulator, bailResult, thisRunTime.pointer)
+
+	}
+}
+
+func swapInstructionAndRun(waitgroup *sync.WaitGroup, swapPtr int, instructionList []instruction) {
+	defer waitgroup.Done()
+
+	targetInstruction := instructionList[swapPtr]
+	if targetInstruction.command == "nop" || targetInstruction.command == "jmp" {
+		instructionCopy := make([]instruction, len(instructionList))
+		copy(instructionCopy, instructionList)
+		newCommand := "nop"
+		if targetInstruction.command == "nop" {
+			newCommand = "jmp"
+		}
+		instructionInsert := instruction{
+			command: newCommand,
+			scale:   targetInstruction.scale,
+		}
+		//fmt.Printf("%v\n%v\n",targetInstruction,instructionInsert)
+		//fmt.Printf("%v\n",instructionList)
+		instructionCopy[swapPtr] = instructionInsert
+		//fmt.Printf("%v\n",instructionCopy)
+		thisRunTime := createRunTimeEnv(&instructionCopy)
+		thisRunTime.startProcessingPt2()
+	}
+}
+
 func solvePt2(inputLines []string) {
+	var waitgroup sync.WaitGroup
+
+	instructionList := createInstructionList(inputLines)
+
+	for i, _ := range *instructionList {
+		waitgroup.Add(1)
+		go swapInstructionAndRun(&waitgroup, i, *instructionList)
+	}
+	waitgroup.Wait()
 
 }
 
 func Solve(inputLines []string) {
-	solvePt1(inputLines)
-	//solvePt2(inputLines)
+	//solvePt1(inputLines)
+	solvePt2(inputLines)
 }
