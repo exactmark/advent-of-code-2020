@@ -113,7 +113,7 @@ func determineHowManyCanHold(target string, bagMapPtr *map[string]*bag) {
 		//	for each bag call populateCanHold
 	}
 
-	fmt.Printf("%v\n", workingHoldStruct)
+	//fmt.Printf("%v\n", workingHoldStruct)
 	sum := 0
 	for _, singleCanHoldLink := range workingHoldStruct.canHoldMap {
 		if singleCanHoldLink.canHoldColor {
@@ -236,6 +236,6 @@ func solvePt2(inputLines []string) {
 }
 
 func Solve(inputLines []string) {
-	//solvePt1(inputLines)
-	solvePt2(inputLines)
+	solvePt1(inputLines)
+	//solvePt2(inputLines)
 }
