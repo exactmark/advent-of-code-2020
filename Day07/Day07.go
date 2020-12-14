@@ -87,16 +87,16 @@ func populateBagsContained(bagMapPtr *map[string]*bag) {
 func populateBagsContainedLogic(bagMapPtr *map[string]*bag, colorToCheck string) int {
 	bagMapActual := *bagMapPtr
 	bagToCheck, _ := bagMapActual[colorToCheck]
-	if bagToCheck.bagsContained>=0 {
+	if bagToCheck.bagsContained >= 0 {
 		return bagToCheck.bagsContained
-	}else{
-		containedDirectly:=0
-		secondDegreeContained:=0
-		for containedColor,numContainedBag:=range bagToCheck.contains{
-			containedDirectly+=numContainedBag
-			secondDegreeContained+=numContainedBag*populateBagsContainedLogic(bagMapPtr,containedColor)
+	} else {
+		containedDirectly := 0
+		secondDegreeContained := 0
+		for containedColor, numContainedBag := range bagToCheck.contains {
+			containedDirectly += numContainedBag
+			secondDegreeContained += numContainedBag * populateBagsContainedLogic(bagMapPtr, containedColor)
 		}
-		bagToCheck.bagsContained=containedDirectly+secondDegreeContained
+		bagToCheck.bagsContained = containedDirectly + secondDegreeContained
 		return bagToCheck.bagsContained
 	}
 
@@ -230,8 +230,8 @@ func solvePt1(inputLines []string) {
 
 func solvePt2(inputLines []string) {
 	bagMap := *(makeBagMap(inputLines))
-	targetColor:="shiny gold"
-	fmt.Printf("%v can hold %v bags\n",targetColor,bagMap[targetColor].bagsContained)
+	targetColor := "shiny gold"
+	fmt.Printf("%v can hold %v bags\n", targetColor, bagMap[targetColor].bagsContained)
 
 }
 

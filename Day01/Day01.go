@@ -7,17 +7,17 @@ import (
 )
 
 func FindMatchingPairSafe(target int, lowList []int, highList []int) (bool, int, int) {
-	lowListCopy:=make([]int,len(lowList))
-	highListCopy:=make([]int,0)
-	copy(lowListCopy,lowList)
-	if (&lowList)!=(&highList){
-		highListCopy=make([]int,len(highList))
-		copy(highListCopy,highList)
+	lowListCopy := make([]int, len(lowList))
+	highListCopy := make([]int, 0)
+	copy(lowListCopy, lowList)
+	if (&lowList) != (&highList) {
+		highListCopy = make([]int, len(highList))
+		copy(highListCopy, highList)
 
-	}else {
-		highListCopy=lowListCopy
+	} else {
+		highListCopy = lowListCopy
 	}
-	return findMatchingPair(target,lowListCopy,highListCopy)
+	return findMatchingPair(target, lowListCopy, highListCopy)
 }
 
 func findMatchingPair(target int, lowList []int, highList []int) (bool, int, int) {
@@ -76,7 +76,7 @@ func solvePt2(inputLines []string) {
 			doublesSum := singlesList[x] + singlesList[y]
 			if doublesSum < 2020 {
 				doublesList = append(doublesList, doublesSum)
-			}else{
+			} else {
 				break
 			}
 		}
@@ -84,8 +84,8 @@ func solvePt2(inputLines []string) {
 
 	_, firstVal, doublesVal := findMatchingPair(2020, singlesList, doublesList)
 	fmt.Printf("%v,%v\n", firstVal, doublesVal)
-	_,secondVal,thirdVal:=findMatchingPair(doublesVal,singlesList,singlesList)
-	fmt.Printf("%v,%v\n", secondVal,thirdVal)
+	_, secondVal, thirdVal := findMatchingPair(doublesVal, singlesList, singlesList)
+	fmt.Printf("%v,%v\n", secondVal, thirdVal)
 	fmt.Printf("Product is %v\n", firstVal*secondVal*thirdVal)
 
 }

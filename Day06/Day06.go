@@ -29,7 +29,7 @@ func createAnswerMapArray(inputLines []string) ([]map[rune]int, []int) {
 	for _, singleLine := range inputLines {
 		if singleLine == "" {
 			returnSurveyCounts = append(returnSurveyCounts, getCharCountFromString(currentString))
-			returnParticipantCounts=append(returnParticipantCounts,len(currentString))
+			returnParticipantCounts = append(returnParticipantCounts, len(currentString))
 			currentString = make([]string, 0)
 		} else {
 			currentString = append(currentString, singleLine)
@@ -37,7 +37,7 @@ func createAnswerMapArray(inputLines []string) ([]map[rune]int, []int) {
 	}
 	if len(currentString) > 0 {
 		returnSurveyCounts = append(returnSurveyCounts, getCharCountFromString(currentString))
-		returnParticipantCounts=append(returnParticipantCounts,len(currentString))
+		returnParticipantCounts = append(returnParticipantCounts, len(currentString))
 	}
 	return returnSurveyCounts, returnParticipantCounts
 }
@@ -48,17 +48,16 @@ func solvePt2(inputLines []string) {
 
 	yesSum := 0
 
-	for x:=0;x<len(surveyAnswersArray) ;x++  {
+	for x := 0; x < len(surveyAnswersArray); x++ {
 		thisParticipantCount := participantCountArray[x]
 		//if any key has the same number of "Y" as the number of participants,
 		//then all participants said y--- count it!
-		for _,val :=range surveyAnswersArray[x]  {
+		for _, val := range surveyAnswersArray[x] {
 			if val == thisParticipantCount {
 				yesSum++
 			}
 		}
 	}
-
 
 	fmt.Printf("Questions with all Y: %v\n", yesSum)
 }
