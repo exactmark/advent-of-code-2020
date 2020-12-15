@@ -73,7 +73,8 @@ func (self *board) processTimeStep() {
 		for _, singleSpace := range singleRow {
 			if singleSpace.isSeat {
 				waitGroup.Add(1)
-				go singleSpace.concPopulateNextState(&waitGroup)
+				//go singleSpace.concPopulateNextState(&waitGroup)
+				singleSpace.concPopulateNextState(&waitGroup)
 			}
 		}
 	}

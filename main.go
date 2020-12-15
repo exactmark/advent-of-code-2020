@@ -3,9 +3,11 @@ package main
 import (
 	"advent-of-code/Day11"
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
+	"runtime/pprof"
 	"time"
 )
 
@@ -28,7 +30,18 @@ func readInputFile(filename string) []string {
 	return returnStrings
 }
 
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+
 func main() {
+	flag.Parse()
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 
 	currentDay := "11"
 
