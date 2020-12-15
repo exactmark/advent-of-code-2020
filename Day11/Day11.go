@@ -29,7 +29,8 @@ func (self *space) countOccupiedNeighbors() int {
 func (self *space) populateNextState() {
 	occupiedNeighbors := self.countOccupiedNeighbors()
 	if self.occupied {
-		if occupiedNeighbors >= 4 {
+		//changed to 5 for pt2
+		if occupiedNeighbors >= 5 {
 			self.nextState = false
 		}
 	} else {
@@ -121,6 +122,16 @@ func createBoard(inputLines []string) board {
 		gameSpace = append(gameSpace, singleRow)
 	}
 
+	populateClosestNeighbors(&gameSpace)
+
+	return board{gameSpace: gameSpace}
+
+}
+
+func populateClosestNeighbors(gameSpacePtr *[][]*space) {
+
+	gameSpace := *(gameSpacePtr)
+
 	for y := 0; y < len(gameSpace); y++ {
 		for x := 0; x < len(gameSpace[y]); x++ {
 			if gameSpace[y][x].isSeat {
@@ -142,9 +153,6 @@ func createBoard(inputLines []string) board {
 			}
 		}
 	}
-
-	return board{gameSpace: gameSpace}
-
 }
 
 func solvePt1(inputLines []string) {
@@ -162,7 +170,84 @@ func solvePt1(inputLines []string) {
 	fmt.Printf("%v occupied seats\n", thisBoard.countOccupiedSeats())
 }
 
+func solvePt2(inputLines []string) {
+	thisBoard := createBoardPt2(inputLines)
+	lastState := thisBoard.getBoardString()
+	thisBoard.processTimeStep()
+	currentState := thisBoard.getBoardString()
+	for lastState != currentState {
+		//fmt.Printf("%v\n\n",lastState)
+		lastState = currentState
+		thisBoard.processTimeStep()
+		currentState = thisBoard.getBoardString()
+	}
+
+	fmt.Println(thisBoard.getBoardString())
+	fmt.Printf("%v occupied seats\n", thisBoard.countOccupiedSeats())
+}
+
+func createBoardPt2(inputLines []string) board {
+
+	gameSpace := make([][]*space, 0)
+
+	for _, singleLine := range inputLines {
+		singleRow := make([]*space, 0)
+		for _, singleRune := range singleLine {
+			//
+			newSpace := space{
+				isSeat:    false,
+				occupied:  false,
+				nextState: false,
+				neighbors: nil,
+			}
+			if singleRune == 'L' {
+				newSpace.isSeat = true
+			}
+			singleRow = append(singleRow, &newSpace)
+		}
+		gameSpace = append(gameSpace, singleRow)
+	}
+
+	populateVisibleNeighbors(&gameSpace)
+
+	return board{gameSpace: gameSpace}
+
+}
+
+func populateVisibleNeighbors(gameSpacePtr *[][]*space) {
+
+	gameSpace := *(gameSpacePtr)
+
+	for y := 0; y < len(gameSpace); y++ {
+		for x := 0; x < len(gameSpace[y]); x++ {
+			if gameSpace[y][x].isSeat {
+				for yDirection := -1; yDirection < 2; yDirection++ {
+					for xDirection := -1; xDirection < 2; xDirection++ {
+						scale := 1
+						for scale < len(gameSpace)*3 {
+							neighborY := y + (yDirection * scale)
+							neighborX := x + (xDirection * scale)
+							if neighborY >= 0 && neighborY < len(gameSpace) {
+								if neighborX >= 0 && neighborX < len(gameSpace[y]) {
+									if neighborX == x && neighborY == y {
+										//	don't add yourself as neighbor
+										break
+									} else if gameSpace[neighborY][neighborX].isSeat {
+										gameSpace[y][x].neighbors = append(gameSpace[y][x].neighbors, gameSpace[neighborY][neighborX])
+										break
+									}
+								}
+							}
+							scale++
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 func Solve(inputLines []string) {
-	solvePt1(inputLines)
-	//solvePt2(inputLines)
+	//solvePt1(inputLines)
+	solvePt2(inputLines)
 }
