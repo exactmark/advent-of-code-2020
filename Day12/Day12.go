@@ -104,11 +104,70 @@ func solvePt1(inputLines []string) {
 	fmt.Printf("Ship has moved %v\n", math.Abs(float64(myShip.yPos))+math.Abs(float64(myShip.xPos)))
 }
 
+func (self *ship) processPt2Move(inputLine string) {
+	fmt.Printf("Processing %v\n", inputLine)
+	command, scale := parseInputToMove(inputLine)
+
+	xDelta := 0
+	yDelta := 0
+
+	switch command {
+
+	case 'N':
+		yDelta = scale
+	case 'S':
+		yDelta = -scale
+	case 'E':
+		xDelta = scale
+	case 'W':
+		xDelta = -scale
+	case 'L':
+		self.changeRotation(-scale)
+	case 'R':
+		self.changeRotation(scale)
+	case 'F':
+		for x := 0; x < scale; x++ {
+			self.xPos += self.xVelocity
+			self.yPos += self.yVelocity
+		}
+	}
+
+	self.xVelocity += xDelta
+	self.yVelocity += yDelta
+
+}
+
+//change waypoint on axis based on signed scale
+func (self *ship) changeRotation(scale int) {
+	if scale < 0 {
+		scale = scale + 360
+	}
+	for scale > 0 {
+		newX := self.yVelocity
+		self.yVelocity = self.xVelocity * -1
+		self.xVelocity = newX
+		scale -= 90
+	}
+
+}
+
 func solvePt2(inputLines []string) {
+	myShip := ship{
+		xPos:      0,
+		yPos:      0,
+		xVelocity: 10,
+		yVelocity: 1,
+	}
+	for _, singleCommand := range inputLines {
+		myShip.processPt2Move(singleCommand)
+		fmt.Printf("ship is at %v,%v. Velocity is %v,%v\n", myShip.xPos, myShip.yPos, myShip.xVelocity, myShip.yVelocity)
+	}
+
+	fmt.Printf("Ship has moved %v\n", math.Abs(float64(myShip.yPos))+math.Abs(float64(myShip.xPos)))
 
 }
 
 func Solve(inputLines []string) {
-	solvePt1(inputLines)
-	//solvePt2(inputLines)
+	//solvePt1(inputLines)
+	solvePt2(inputLines)
 }
