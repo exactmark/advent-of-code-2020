@@ -2,12 +2,14 @@ package Day14
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
 
 type memState struct {
 	currentMask string
+	maskList    []string
 	memory      map[int]int64
 }
 
@@ -78,12 +80,34 @@ func (self *memState) sumAllMemory() int64 {
 	return sum
 }
 
+func (self *memState) setCurrentMask(mask string) {
+	self.currentMask = mask
+	self.makeMaskList()
+}
+
+func (self *memState) makeMaskList() {
+	self.maskList=make([]string,0)
+	xCount:=0
+	for _,singleRune := range self.currentMask{
+		if singleRune=='X'{
+			xCount++
+		}
+	}
+	for x:=0;x<(math.Pow(2,xCount))
+    // count number of x's
+    // make for loop of 2^x numbers
+    // for each x, convert to binary string.
+    // make new string to add to masklist
+    // run double ptr, 1 in original mask, one in binstring.
+    // replace as required
+}
+
 func solvePt1(inputLines []string) {
 
 	memory := memState{memory: make(map[int]int64)}
 	for _, singleLine := range inputLines {
 		if singleLine[:4] == "mask" {
-			memory.currentMask = singleLine[7:]
+			memory.setCurrentMask(singleLine[7:])
 		} else {
 			memory.applyAssignment(singleLine)
 		}
